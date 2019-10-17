@@ -1,5 +1,5 @@
 {
-  "name": "SocketIO-Client",
+  "name": "SocketIOClient",
   "version": "1.0.0",
   "description": "SocketIO-Client",
   "main": "main.js",
@@ -19,12 +19,12 @@
   "author": "zhangwen",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^4.1.1",
-    "electron-builder": "^20.39.0"
+    "electron": "^6.0.12",
+    "electron-builder": "^21.2.0"
   },
   "dependencies": {
-    "bulma": "^0.7.4",
-    "socket.io-client": "^2.2.0"
+    "bulma": "^0.7.5",
+    "socket.io-client": "^2.3.0"
   },
   "build": {
     "appId": "com.electron.socketio",

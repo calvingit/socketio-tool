@@ -3,271 +3,215 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Socket.IO 测试客户端</title>
+    <title>智慧家庭服务器消息推送测试客户端 Written By Zhangwen</title>
     <link rel="stylesheet" href="css/main.css" />
   </head>
 
   <body>
-    <section style="margin: 10px">
-      <div class="container">
-        选择服务器环境：
-        <label class="radio">
-          <input type="radio" name="SocketURL" id="test" checked />
-          测试环境
-        </label>
-        <label class="radio">
-          <input type="radio" name="SocketURL" id="product" />
-          正式环境</label
-        >
-      </div>
-      <div style="margin-top: 10px">
-        <div class="container">
-          <label class="labelText">用户名:</label>
-          <input class="input is-primary" type="text" id="username" value="13242983700" />
+    <section style="margin: 10px; position: relative;">
+      <!-- 环境开始 -->
+      <div class="field is-horizontal">
+        <div class="field-label">
+          <label class="label">选择环境</label>
         </div>
-        <div class="container">
-          <label class="labelText">密码:</label>
-          <input class="input is-primary" type="text" id="password" value="zw123456" />
-        </div>
-
-        <div class="container" style="margin-top: 10px">
-          <button class="button is-primary" onclick="login()">登录</button>
-        </div>
-      </div>
-
-      <div class="container" style="margin-top: 10px">
-        <label class="labelText">选择主机:</label>
-        <div class="field">
-          <div class="control">
-            <div class="select is-primary">
-              <select id="masters-select"> </select>
+        <div class="field-body">
+          <div class="field is-narrow">
+            <div class="control">
+              <label class="radio">
+                <input type="radio" name="SocketURL" id="test" checked />
+                测试环境
+              </label>
+              <label class="radio">
+                <input type="radio" name="SocketURL" id="product" />
+                正式环境
+              </label>
             </div>
           </div>
         </div>
       </div>
-      <div class="container">
-        <label class="labelText">过滤字符串:</label>
-        <input class="input is-warning" type="text" id="filter" placeholder="只过滤新数据" />
+      <!-- 环境结束 -->
+
+      <!-- 用户登录开始 -->
+      <div class="field is-horizontal is-grouped">
+        <div class="field-label  is-normal">
+          <label class="label">登录账号</label>
+        </div>
+        <div class="field-body">
+          <div class="field is-narrow">
+            <input
+              class="input"
+              type="text"
+              id="username"
+              value="13242983700"
+              placeholder="用户名"
+            />
+          </div>
+          <div class="field is-narrow">
+            <input class="input" type="text" id="password" value="zw123456" placeholder="密码" />
+          </div>
+          <div class="field">
+            <p class="control">
+              <button class="button is-success" onclick="login()">
+                登录
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- 用户登录结束 -->
+
+      <!-- 选择并连接服务器开始 -->
+
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">选择主机</label>
+        </div>
+        <div class="field-body">
+          <div class="field is-narrow">
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="masters-select"> </select>
+              </div>
+            </div>
+          </div>
+          <div class="field is-narrow ">
+            <p class="control">
+              <button class="button is-success" onclick="startConnecting()">
+                连接服务器
+              </button>
+            </p>
+          </div>
+          <div class="field is-narrow ">
+            <p class="control">
+              <button class="button is-danger" onclick="stopConnecting()">
+                断开连接
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="field is-horizontal">
+        <div class="field-label">
+          <label class="label">消息类型</label>
+        </div>
+        <div class="field-body">
+          <div class="field is-narrow">
+            <div class="control">
+              <label class="checkbox">
+                <input type="checkbox" checked value="灯光" />
+                灯光/场景
+              </label>
+
+              <label class="checkbox">
+                <input type="checkbox" checked value="调光" />
+                调光
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="RGB" />
+                RGB调光
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="温控器" />
+                温控器/地暖
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="新风" />
+                新风
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="背景音乐" />
+                背景音乐
+              </label>
+              <br />
+              <label class="checkbox">
+                <input type="checkbox" checked value="温度" />
+                温度
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="湿度" />
+                湿度
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="光照" />
+                光照
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="CO2" />
+                CO2
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="AQI" />
+                AQI
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="红外" />
+                红外
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="SOS" />
+                SOS
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="水浸" />
+                水浸
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="燃气" />
+                燃气
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" checked value="烟雾" />
+                烟雾
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <section>
-        <div class="container" style="margin-top: 20px; margin-bottom: 20px">
-          <button class="button is-primary" onclick="startConnecting()">连接服务器</button>
-          <button class="button is-danger" onclick="clearMessage()" style="margin-left: 50px">
-            清空内容
-          </button>
+      <div class="field is-horizontal">
+        <div class="field-label">
+          <!-- Left empty for spacing -->
         </div>
-      </section>
+        <div class="field-body">
+          <div class="field is-narrow">
+            <div class="control">
+              <button class="button is-primary" onclick="selectAll()">
+                全选
+              </button>
+            </div>
+          </div>
+          <div class="field is-narrow">
+            <div class="control">
+              <button class="button is-primary" onclick="inverseSelect()">
+                反选
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <div class="content" id="output" style="word-wrap:break-word;"></div>
+      <div class="field is-horizontal">
+        <div class="field-label">
+          <!-- Left empty for spacing -->
+        </div>
+        <div class="field-body">
+        <div class="field is-normal">
+          <div class="control">
+            <button class="button is-narrow is-danger" onclick="clearMessage()">
+              清空消息
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+   <!-- 内容区 -->
+    <section style="margin: 10px;">
+      <textarea class="textarea" id='output' placeholder="这里显示推送消息" rows="20"></textarea>
     </section>
 
     <script src="https://cdn.bootcss.com/js-sha1/0.6.0/sha1.min.js"></script>
 
-    <script>
-      // You can also require other files to run in this process
-      //require('./renderer.js');
-
-      var userId = '';
-      const TestHttpURL = 'http://test.jobosz.com:9090';
-      const ProductHttpURL = 'http://smarthome.jobosz.com';
-
-      const TestSocketIOURL = 'http://test.jobosz.com:9092';
-      const ProductSocketIOURL = 'http://smarthome.jobosz.com:9092';
-
-      /****************** dom 事件开始 *******************/
-      // 是否测试环境
-      function isTestEnv() {
-        /// 选中的单选框
-        return document.getElementById('test').checked;
-      }
-
-      // 生成uuid
-      function uuid() {
-        var d = Date.now();
-        if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
-          d += performance.now(); //use high-precision timer if available
-        }
-        return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          var r = (d + Math.random() * 16) % 16 | 0;
-          d = Math.floor(d / 16);
-          return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-        });
-      }
-
-      function login() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        if (username.length == 0) {
-          alert('请输入用户名');
-          return;
-        }
-
-        if (password.length == 0) {
-          alert('请输入密码');
-          return;
-        }
-
-        const httpServerURL = isTestEnv() ? TestHttpURL : ProductHttpURL;
-        loginRequest(httpServerURL, username, password);
-      }
-
-      function startConnecting() {
-        if (userId.length == 0) {
-          alert('请先登录账号');
-          return;
-        }
-
-        function isBigEnough(element, index, array) {
-          return element >= 10;
-        }
-        var filtered = [12, 5, 8, 130, 44].filter(isBigEnough);
-        console.log(filtered);
-
-        var masterCode = '';
-        const options = document.getElementsByTagName('option');
-        for (let index = 0; index < options.length; index++) {
-          const element = options[index];
-          if (element.selected) {
-            masterCode = element.value.split('(')[0];
-          }
-        }
-
-        connect(
-          isTestEnv() ? TestSocketIOURL : ProductSocketIOURL,
-          userId,
-          masterCode.length ? masterCode : userId
-        );
-      }
-
-      async function request(url, parameters) {
-        const date = new Date();
-        const timestamp = Math.floor(date.getTime() / 1000);
-
-        const nonce = uuid();
-
-        sha1 = require('./sha1.js');
-        const sign = sha1(timestamp + nonce + 'szjobo');
-
-        var params = {
-          bid: 'SmartHome',
-          platform: 'IOS',
-          version: '1.0',
-          ts: String(timestamp),
-          nonce: nonce,
-          sign: sign,
-          deviceid: 'B6C4D30E4BC646C196EB95E026229BCC',
-          ...parameters,
-        };
-        console.log(url);
-        console.log(params);
-        try {
-          return await fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(params),
-            headers: new Headers({
-              'Content-Type': 'application/json',
-            }),
-          });
-        } catch (error) {
-          return nil;
-        }
-      }
-
-      function loginRequest(url, username, password) {
-        const loginURL = url + '/jobo-agw/user/login';
-        request(loginURL, { account: username, password: password })
-          .then(res => res.json())
-          //.catch(error => console.error('Error:', error))
-          .then(response => {
-            if (response['code'] == 0) {
-              userId = response['data']['userId'];
-              getMastersList(userId);
-            } else {
-              alert(response['msg']);
-            }
-          });
-      }
-
-      function getMastersList(userId) {
-        const url =
-          (isTestEnv() ? TestHttpURL : ProductHttpURL) + '/jobo-agw//my/master/queryMasterList';
-        request(url, { userId: userId })
-          .then(res => res.json())
-          //.catch(error => console.error('Error:', error))
-          .then(response => {
-            if (response['code'] == 0) {
-              const datas = response['data'];
-              updateMastersList(datas);
-            } else {
-              alert(response['msg']);
-            }
-          });
-      }
-
-      function updateMastersList(masters) {
-        const options = masters
-          .map(obj => {
-            return `<option ${obj['isDefault'] ? 'selected' : ''}>${obj['masterCode']}(${
-              obj['masterAlias']
-            })</option>`;
-          })
-          .join('');
-        console.log(options);
-        document.getElementById('masters-select').innerHTML = options;
-      }
-      /****************** dom 事件结束 ********************/
-
-      var userSocket;
-      var masterSocket;
-
-      // 连接服务器
-      function connect(url, userId, masterCode) {
-        clearMessage();
-        if (userSocket) {
-          userSocket.close();
-        }
-        if (masterSocket) {
-          masterSocket.close();
-        }
-
-        if (userId) {
-          userSocket = createSocket(url, userId, userId);
-        }
-
-        if (masterCode) {
-          masterSocket = createSocket(url, userId, masterCode);
-        }
-      }
-
-      function createSocket(url, clientId, roomId) {
-        const serverURL = url + '?clientId=' + clientId + '&roomId=' + roomId + '&src=iOS';
-        console.log('serverURL:' + serverURL);
-        var io = require('socket.io-client');
-        socket = io.connect(serverURL);
-        console.log('serverURL: ' + serverURL);
-        let output = document.getElementById('output');
-        let filter = document.getElementById('filter');
-        socket.on('push_msg', function(data) {
-          const filterString = filter.value.trim();
-          if (filterString.length && !data.includes(filterString)) {
-            return;
-          }
-          const date = new Date();
-          const text = `<span style="color: red">${date.toLocaleTimeString()}: </span>${data}`;
-          output.innerHTML = output.innerHTML + text + '<br>';
-        });
-
-        return socket;
-      }
-
-      // 清空
-      function clearMessage(argument) {
-        // body...
-        let output = document.getElementById('output');
-
-        output.innerText = '';
-      }
-    </script>
+    <script src="index.js"></script>
   </body>
 </html>
