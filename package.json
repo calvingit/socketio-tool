@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win --ia32",
+    "dist": "electron-builder --win",
     "distMac": "electron-builder --mac"
   },
   "repository": "https://github.com/electron/electron-quick-start",
@@ -30,15 +30,22 @@
     "appId": "com.electron.socketio",
     "mac": {
       "target": [
-        "dmg",
-        "zip"
+        "dmg"
       ]
     },
+
     "win": {
       "target": [
-        "nsis",
-        "zip"
+        "nsis"
       ]
-    }
+    },
+
+    "linux": {
+    "category": "Utility",
+    "target": [
+      "deb",
+      "AppImage"
+    ]
+  }
   }
 }
