@@ -1,7 +1,6 @@
 const assert = require('assert');
 
-function processMessage(message) {
-  const obj = JSON.parse(message);
+function processMessage(obj) {
   if (obj.type === 'COMMAND') {
     return process(obj.msg);
   } else {

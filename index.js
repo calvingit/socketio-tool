@@ -39,6 +39,7 @@ function login() {
   }
 
   const httpServerURL = isTestEnv() ? TestHttpURL : ProductHttpURL;
+  document.getElementById('masters-select').innerHTML = '';
   loginRequest(httpServerURL, username, password);
 }
 
@@ -113,7 +114,7 @@ function loginRequest(url, username, password) {
   const loginURL = url + '/jobo-agw/user/login';
   request(loginURL, { account: username, password: password })
     .then(res => res.json())
-    //.catch(error => console.error('Error:', error))
+    .catch(error => console.error('Error:', error))
     .then(response => {
       if (response['code'] == 0) {
         userId = response['data']['userId'];
@@ -126,7 +127,7 @@ function loginRequest(url, username, password) {
 
 /// 获取主机列表
 function getMastersList(userId) {
-  const url = (isTestEnv() ? TestHttpURL : ProductHttpURL) + '/jobo-agw//my/master/queryMasterList';
+  const url = (isTestEnv() ? TestHttpURL : ProductHttpURL) + '/jobo-agw/my/master/queryMasterList';
   request(url, { userId: userId })
     .then(res => res.json())
     //.catch(error => console.error('Error:', error))
@@ -187,14 +188,21 @@ function createSocket(url, clientId, roomId) {
   const { processMessage } = require('./process_message');
   socket.on('push_msg', function(data) {
     console.log(data);
-    const msg = processMessage(data);
-    if (!msg || !isWantedMessage(msg)) return;
-
-    // const bgColor = msg.includes('ACK') ? '#ffffff' : '#f1f1f1';
-    // const div = `<div style='background-color:${bgColor}; margin-top: 5px;'>${msg}</div>`;
-    output.value += `${msg}\n`;
+    const obj = JSON.parse(data);
+    if (obj.code === 0) {
+      output.value += `${data}\n`;
+    } else {
+      const msg = processMessage(obj);
+      if (!msg || !isWantedMessage(msg)) return;
+      output.value += `${msg}\n`;
+    }
   });
-
+  socket.on('connect', () => {
+    output.value += `连接成功\n`;
+  });
+  socket.on('disconnect', () => {
+    output.value += `断开连接成功\n`;
+  });
   return socket;
 }
 
