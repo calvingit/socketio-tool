@@ -84,7 +84,7 @@ function processMusic(msg) {
 /// 处理灯光、场景
 function processA2B2(msg) {
   const addr = to16HexString(msg.physicalAddr);
-  if (msg.brightness) {
+  if (msg.hasOwnProperty('brightness')) {
     return `调光(${addr}): 亮度${msg.brightness}, 回路${msg.outNo}`;
   } else {
     return `灯光/场景(${addr}): ${msg.on ? '开' : '关'}, 回路${msg.outNo}`;

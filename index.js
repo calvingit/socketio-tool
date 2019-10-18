@@ -116,11 +116,12 @@ function loginRequest(url, username, password) {
     .then(res => res.json())
     .catch(error => console.error('Error:', error))
     .then(response => {
-      if (response['code'] == 0) {
-        userId = response['data']['userId'];
+      if (response.code == 0) {
+        /// userId存起来
+        userId = response.data.userId;
         getMastersList(userId);
       } else {
-        alert(response['msg']);
+        alert(response.msg);
       }
     });
 }
@@ -128,21 +129,22 @@ function loginRequest(url, username, password) {
 /// 获取主机列表
 function getMastersList(userId) {
   const url = (isTestEnv() ? TestHttpURL : ProductHttpURL) + '/jobo-agw/my/master/queryMasterList';
+  console.log('获取主机列表: ' + url);
   request(url, { userId: userId })
     .then(res => res.json())
     //.catch(error => console.error('Error:', error))
     .then(response => {
-      if (response['code'] == 0) {
-        const datas = response['data'];
-        updateMastersList(datas);
+      if (response.code == 0) {
+        updateMastersList(response.data);
       } else {
-        alert(response['msg']);
+        alert(response.msg);
       }
     });
 }
 
 /// 更新主机列表
 function updateMastersList(masters) {
+  console.table(masters);
   const options = masters
     .map(obj => {
       return `<option ${obj['isDefault'] ? 'selected' : ''}>${obj['masterCode']}(${
@@ -189,7 +191,7 @@ function createSocket(url, clientId, roomId) {
   socket.on('push_msg', function(data) {
     console.log(data);
     const obj = JSON.parse(data);
-    if (obj.code === 0) {
+    if (obj.hasOwnProperty('code')) {
       output.value += `${data}\n`;
     } else {
       const msg = processMessage(obj);
