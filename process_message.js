@@ -151,17 +151,21 @@ function processA3B3(msg) {
 /// 红外传感器
 function processInfraredAndMagneticSensors(msg) {
   const name =
-    msg.type === 'SENSOR_DOOR_MAGNETIC'
+    msg.header === 'SENSOR_DOOR_MAGNETIC'
       ? '门磁'
-      : msg.type === 'SENSOR_WINDOW_MAGNETIC'
+      : msg.header === 'SENSOR_WINDOW_MAGNETIC'
       ? '窗磁'
       : '红外';
   const addr = to16HexString(msg.physicalAddr);
   const defence = msg.defensed ? '布防' : '撤防';
   const value = msg.dectVal === '0' ? '无人' : msg.dectVal === '' ? '暂无数据' : '有人';
-  const voltage = msg.voltage.length > 0 ? msg.voltage : '无数据';
   const warn = msg.warnStatus === 'OK' ? '正常' : '报警';
-  return `${name}传感器(${addr})：${value}, ${defence}, ${warn}, 电量${voltage}`;
+  if (msg.header !== 'SENSOR_INFRARED') {
+    const voltage = msg.voltage.length > 0 ? msg.voltage : '无数据';
+    return `${name}传感器(${addr})：${value}, ${defence}, ${warn}, 电量${voltage}`;
+  } else {
+    return `${name}传感器(${addr})：${value}, ${defence}, ${warn}`;
+  }
 }
 
 exports.processMessage = processMessage;
