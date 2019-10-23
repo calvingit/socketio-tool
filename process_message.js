@@ -118,7 +118,7 @@ function processADBD(msg) {
 /// 处理传感器
 function processA3B3(msg) {
   const status = msg.status === 'OK' ? '正常' : '报警';
-  const value = msg.dectVal & '暂无数据';
+  const value = msg.dectVal === '' ? '暂无数据' : msg.dectVal;
   const addr = to16HexString(msg.physicalAddr);
   switch (msg.type) {
     case 'GAS':

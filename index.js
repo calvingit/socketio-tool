@@ -185,27 +185,33 @@ function createSocket(url, clientId, roomId) {
   console.log('serverURL:' + serverURL);
   var io = require('socket.io-client');
   socket = io.connect(serverURL);
-  let output = document.getElementById('output');
 
   const { processMessage } = require('./process_message');
   socket.on('push_msg', function(data) {
     console.log(data);
     const obj = JSON.parse(data);
     if (obj.hasOwnProperty('code')) {
+      appendMsg(data);
       output.value += `${data}\n`;
     } else {
       const msg = processMessage(obj);
       if (!msg || !isWantedMessage(msg)) return;
-      output.value += `${msg}\n`;
+      appendMsg(msg);
     }
   });
   socket.on('connect', () => {
-    output.value += `连接成功\n`;
+    appendMsg('连接服务器成功');
   });
   socket.on('disconnect', () => {
-    output.value += `断开连接成功\n`;
+    appendMsg('断开连接服务器');
   });
   return socket;
+}
+
+function appendMsg(msg) {
+  let output = document.getElementById('output');
+  output.value = `${msg}\n${output.value}`;
+  //output.scrollTop = output.scrollHeight;
 }
 
 // 清空
@@ -245,7 +251,13 @@ function getCheckedMessageTypes() {
 /// 判断消息是否符合条件
 function isWantedMessage(str) {
   const types = getCheckedMessageTypes();
-  if (types.length == 0) return false;
-
+  if (types.length == 0) {
+    return false;
+  }
+  // 自定义过滤字符串
+  const input = document.getElementById('filterString');
+  if (input.value && !str.includes(input.value)) {
+    return false;
+  }
   return types.some(e => str.includes(e));
 }
