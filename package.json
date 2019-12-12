@@ -19,8 +19,7 @@
   "author": "zhangwen",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^6.0.12",
-    "electron-builder": "^21.2.0"
+    "electron": "^6.0.12"
   },
   "dependencies": {
     "bulma": "^0.7.5",
@@ -33,19 +32,17 @@
         "dmg"
       ]
     },
-
     "win": {
       "target": [
         "nsis"
       ]
     },
-
     "linux": {
-    "category": "Utility",
-    "target": [
-      "deb",
-      "AppImage"
-    ]
-  }
+      "category": "Utility",
+      "target": [
+        "deb",
+        "AppImage"
+      ]
+    }
   }
 }

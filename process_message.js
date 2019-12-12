@@ -33,6 +33,8 @@ function process(msg) {
       return time + processInfraredAndMagneticSensors(msg);
     case 'RGB_LIGHT':
       return time + processRGB(msg);
+    case 'PRE_MANUAL_SCENE':
+      return processScene(msg);
     default:
       if (msg.packetType === 'TYPE_MUSIC' && msg.subType === 'MUSIC_CONTROL') {
         return time + processMusic(msg);
@@ -44,6 +46,12 @@ function process(msg) {
 /// 将整数转成8位长度的16进制字符串
 function to16HexString(i) {
   return ('0000000' + ((i | 0) + 4294967296).toString(16)).substr(-8);
+}
+
+function processScene(msg) {
+  const state = msg['on'] ? '开' : '关';
+  const addr = msg['physicalAddr'];
+  return `场景(${to16HexString(addr)}, moduleAddr: ${addr}, inNo: ${msg['inNo']}) ${state}`;
 }
 
 function processAEBE(msg) {
@@ -87,7 +95,7 @@ function processA2B2(msg) {
   if (msg.hasOwnProperty('brightness')) {
     return `调光(${addr}): 亮度${msg.brightness}, 回路${msg.outNo}`;
   } else {
-    return `灯光/场景(${addr}): ${msg.on ? '开' : '关'}, 回路${msg.outNo}`;
+    return `灯光(${addr}): ${msg.on ? '开' : '关'}, 回路${msg.outNo}`;
   }
 }
 
