@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "pack": "./node_modules/.bin/electron-builder --dir",
-    "dist": "electron-builder --publish onTagOrDraft"
+    "win": "electron-builder --win nsis:x64",
+    "mac": "electron-builder --mac"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -19,8 +19,8 @@
   "author": "zhangwen",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron-builder": "^21.2.0",
-    "electron": "^6.0.12"
+    "electron-builder": "^22.5.0",
+    "electron": "^8.2.1"
   },
   "dependencies": {
     "bulma": "^0.7.5",
