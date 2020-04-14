@@ -1,3 +1,13 @@
+const storage = require('./storage');
+storage.getUserInfo().then((user) => {
+  if (user.username !== undefined) {
+    document.getElementById('username').value = user.username;
+  }
+  if (user.password !== undefined) {
+    document.getElementById('password').value = user.password;
+  }
+});
+
 var userId = '';
 const TestHttpURL = 'http://test.jobosz.com:9090';
 const ProductHttpURL = 'http://smarthome.jobosz.com';
@@ -18,7 +28,7 @@ function uuid() {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
     d += performance.now(); //use high-precision timer if available
   }
-  return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     var r = (d + Math.random() * 16) % 16 | 0;
     d = Math.floor(d / 16);
     return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
@@ -113,12 +123,13 @@ async function request(url, parameters) {
 function loginRequest(url, username, password) {
   const loginURL = url + '/jobo-agw/user/login';
   request(loginURL, { account: username, password: password })
-    .then(res => res.json())
-    .catch(error => console.error('Error:', error))
-    .then(response => {
+    .then((res) => res.json())
+    .catch((error) => console.error('Error:', error))
+    .then((response) => {
       if (response.code == 0) {
         /// userId存起来
         userId = response.data.userId;
+        storage.setUserInfo(username, password).then();
         getMastersList(userId);
       } else {
         alert(response.msg);
@@ -131,9 +142,9 @@ function getMastersList(userId) {
   const url = (isTestEnv() ? TestHttpURL : ProductHttpURL) + '/jobo-agw/my/master/queryMasterList';
   console.log('获取主机列表: ' + url);
   request(url, { userId: userId })
-    .then(res => res.json())
+    .then((res) => res.json())
     //.catch(error => console.error('Error:', error))
-    .then(response => {
+    .then((response) => {
       if (response.code == 0) {
         updateMastersList(response.data);
       } else {
@@ -146,7 +157,7 @@ function getMastersList(userId) {
 function updateMastersList(masters) {
   console.table(masters);
   const options = masters
-    .map(obj => {
+    .map((obj) => {
       return `<option ${obj['isDefault'] ? 'selected' : ''}>${obj['masterCode']}(${
         obj['masterAlias']
       })</option>`;
@@ -187,7 +198,7 @@ function createSocket(url, clientId, roomId) {
   socket = io.connect(serverURL);
 
   const { processMessage } = require('./process_message');
-  socket.on('push_msg', function(data) {
+  socket.on('push_msg', function (data) {
     console.log(data);
     const obj = JSON.parse(data);
     if (obj.hasOwnProperty('code')) {
@@ -243,9 +254,9 @@ function inverseSelect() {
 function getCheckedMessageTypes() {
   const checkboxes = document.querySelectorAll('input[type=checkbox]');
   return Array.prototype.map
-    .call(checkboxes, box => ({ checked: box.checked, value: box.value }))
-    .filter(i => i.checked)
-    .map(i => i.value);
+    .call(checkboxes, (box) => ({ checked: box.checked, value: box.value }))
+    .filter((i) => i.checked)
+    .map((i) => i.value);
 }
 
 /// 判断消息是否符合条件
@@ -259,5 +270,5 @@ function isWantedMessage(str) {
   if (input.value && !str.includes(input.value)) {
     return false;
   }
-  return types.some(e => str.includes(e));
+  return types.some((e) => str.includes(e));
 }

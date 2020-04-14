@@ -40,6 +40,7 @@ function process(msg) {
         return time + processMusic(msg);
       }
       return null;
+      f;
   }
 }
 
@@ -56,13 +57,13 @@ function processScene(msg) {
 
 function processAEBE(msg) {
   const status = msg.on ? '开' : '关';
-  let mode = (function(m) {
+  let mode = (function (m) {
     const modes = ['OFF', 'SWITCH_FAN', 'AIR_FAN', 'AUTO', 'STRONG', 'ECO'];
     const modesDesc = ['关', '换气', '排气', '智能', '强劲', '省电'];
     return modesDesc[modes.indexOf(m)];
   })(msg.mode);
 
-  let speed = (function(s) {
+  let speed = (function (s) {
     const speeds = ['OFF', 'LOW', 'MID', 'HIGH'];
     const speedsDesc = ['关', '低档', '中档', '高档'];
     return speedsDesc[speeds.indexOf(s)];
@@ -110,14 +111,37 @@ function processRGB(msg) {
 /// 处理温控器、地暖
 function processADBD(msg) {
   const on = msg.on ? '开' : '关';
-  const mode = msg.mode === 0 ? '制冷' : '制热';
-  const speed = msg.funLowSpeed
+  let mode = '';
+  switch (msg.mode) {
+    case 0:
+      mode = '地暖';
+      break;
+    case 1:
+      mode = '制冷';
+      break;
+    case 2:
+      mode = '抽湿';
+      break;
+    case 3:
+      mode = '送风';
+      break;
+    case 4:
+      mode = '制热';
+      break;
+
+    default:
+      break;
+  }
+  let speed = msg.funLowSpeed
     ? '低风'
     : msg.funMidSpeed
     ? '中风'
     : msg.funHighSpeed
     ? '高风'
     : '风速无';
+  if (msg.auto) {
+    speed = '自动' + speed;
+  }
   return `温控器/地暖(${to16HexString(msg.physicalAddr)})：${on}, ${mode}, ${speed}, 设置温度${
     msg.setTemp
   }, 室内温度${msg.roomTemp}`;
@@ -138,7 +162,7 @@ function processA3B3(msg) {
     case 'HUMIDITY':
       return `${msg.areaName}湿度传感器(${addr})：检测值${value}, ${status}`;
     case 'SOS':
-      return `${msg.areaName}SOS传感器(${addr})：检测值${value}, ${status}`;
+      return `${msg.areaName}SOS传感器(${addr})：检测值${value}, ${status}, 电量${msg.voltage}`;
     case 'CO2':
       return `${msg.areaName}CO2传感器(${addr})：检测值${value}, ${status}`;
     case 'SUN':
