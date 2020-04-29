@@ -39,14 +39,13 @@ function process(msg) {
       if (msg.packetType === 'TYPE_MUSIC' && msg.subType === 'MUSIC_CONTROL') {
         return time + processMusic(msg);
       }
-      return null;
-      f;
-  }
+      return null;  
+    }
 }
 
 /// 将整数转成8位长度的16进制字符串
 function to16HexString(i) {
-  return ('0000000' + ((i | 0) + 4294967296).toString(16)).substr(-8);
+  return i + ',  0x' + ('0000000' + ((i | 0) + 4294967296).toString(16)).substr(-8);
 }
 
 function processScene(msg) {
@@ -111,40 +110,41 @@ function processRGB(msg) {
 /// 处理温控器、地暖
 function processADBD(msg) {
   const on = msg.on ? '开' : '关';
-  let mode = '';
-  switch (msg.mode) {
-    case 0:
-      mode = '地暖';
-      break;
-    case 1:
-      mode = '制冷';
-      break;
-    case 2:
-      mode = '抽湿';
-      break;
-    case 3:
-      mode = '送风';
-      break;
-    case 4:
-      mode = '制热';
-      break;
+  // 地暖
+  if (msg.mode === 0) {
+    return `地暖(${to16HexString(msg.physicalAddr)})：${on}, 设置温度${
+      msg.setTemp
+    }, 室内温度${msg.roomTemp}`;
+  }
+  // 温控器
+  else {
+    const modes = new Map([
+      [0, '地暖'],
+      [1, '自动'],
+      [2, '制冷'],
+      [3, '抽湿'],
+      [4, '送风'],
+      [5, '制热'],
+    ]);
+  
+    let mode = modes.get(msg.mode);
+  
+    let speed = msg.funLowSpeed
+      ? '低风'
+      : msg.funMidSpeed
+      ? '中风'
+      : msg.funHighSpeed
+      ? '高风'
+      : '风速无';
+    if (msg.auto) {
+      speed = speed + '(自动)';
+    }
+  
+    return `温控器(${to16HexString(msg.physicalAddr)})：${on}, ${mode}, ${speed}, 设置温度${
+      msg.setTemp
+    }, 室内温度${msg.roomTemp}`;
+  }
 
-    default:
-      break;
-  }
-  let speed = msg.funLowSpeed
-    ? '低风'
-    : msg.funMidSpeed
-    ? '中风'
-    : msg.funHighSpeed
-    ? '高风'
-    : '风速无';
-  if (msg.auto) {
-    speed = '自动' + speed;
-  }
-  return `温控器/地暖(${to16HexString(msg.physicalAddr)})：${on}, ${mode}, ${speed}, 设置温度${
-    msg.setTemp
-  }, 室内温度${msg.roomTemp}`;
 }
 
 /// 处理传感器
