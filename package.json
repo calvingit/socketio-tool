@@ -1,12 +1,11 @@
 {
   "name": "SocketIOClient",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "SocketIO-Client",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "win": "electron-builder --win nsis:x64",
-    "mac": "electron-builder --mac"
+    "pac": "electron-packager ./ SocketIOTools --out ./build --overwrite"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -19,32 +18,12 @@
   "author": "zhangwen",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron-builder": "^22.5.0",
-    "electron": "^8.2.1"
+    "electron": "^8.2.1",
+    "electron-packager": "^14.2.1"
   },
   "dependencies": {
     "bulma": "^0.7.5",
     "electron-json-storage": "^4.1.8",
     "socket.io-client": "^2.3.0"
-  },
-  "build": {
-    "appId": "com.electron.socketio",
-    "mac": {
-      "target": [
-        "dmg"
-      ]
-    },
-    "win": {
-      "target": [
-        "nsis"
-      ]
-    },
-    "linux": {
-      "category": "Utility",
-      "target": [
-        "deb",
-        "AppImage"
-      ]
-    }
   }
 }
