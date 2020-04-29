@@ -3,7 +3,12 @@ const assert = require('assert');
 function processMessage(obj) {
   if (obj.type === 'COMMAND') {
     return process(obj.msg);
-  } else {
+  }
+  else if (obj.type === 'MASTER_CONF_ACK') {
+    console.log(obj);
+    return processInfraredDevice(obj.msg);
+  }
+  else {
     let cache = obj.msg.cache; // 字符串
     if (cache && cache.length > 0) {
       const o = JSON.parse(cache);
@@ -46,6 +51,22 @@ function process(msg) {
 /// 将整数转成8位长度的16进制字符串
 function to16HexString(i) {
   return i + ',  0x' + ('0000000' + ((i | 0) + 4294967296).toString(16)).substr(-8);
+}
+
+/// 添加、删除红外的主机回包
+function processInfraredDevice(msg) {
+  let operation = '';
+  if(msg.oper === 'SAVE') {
+    operation = '添加';
+  }
+  else if (msg.oper === 'DELETE') {
+    operation = '删除';
+  }
+  else {
+    operation = msg.oper;
+  }
+
+  return `主机回包：${operation}红外设备, ${msg.infraredId}`;
 }
 
 function processScene(msg) {
